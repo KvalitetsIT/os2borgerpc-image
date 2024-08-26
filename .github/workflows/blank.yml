@@ -30,7 +30,7 @@ jobs:
 
       - name: Build OS2borgerpc image
         run: |
-          cd image && ./build_os2borgerpc_image.sh ubuntu-22.04.4-desktop-amd64.iso borgerpc-ubuntu-22.04.4-desktop-amd64.iso
+          cd image && ./build_os2borgerpc_image.sh ../ubuntu-22.04.4-desktop-amd64.iso borgerpc-ubuntu-22.04.4-desktop-amd64.iso
 
       - name: Create a new release
         id: create_release
