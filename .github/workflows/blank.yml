@@ -1,0 +1,50 @@
+name: Build and Release Custom Ubuntu ISO
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger of the workflow
+
+jobs:
+  build-and-release-iso:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up cache for Ubuntu ISO
+        id: cache-ubuntu-iso
+        uses: actions/cache@v3
+        with:
+          path: ubuntu-22.04.4-desktop-amd64.iso
+          key: ubuntu-iso-${{ runner.os }}-${{ hashFiles('ubuntu-22.04.4-desktop-amd64.iso') }}
+          restore-keys: |
+            ubuntu-iso-${{ runner.os }}-
+
+      - name: Download Ubuntu ISO if not cached
+        if: steps.cache-ubuntu-iso.outputs.cache-hit != 'true'
+        run: |
+          wget -O ubuntu-22.04.4-desktop-amd64.iso https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-desktop-amd64.iso
+
+      - name: Build OS2borgerpc image
+        run: |
+          ./image/build_os2borgerpc_image.sh ubuntu-22.04.4-desktop-amd64.iso borgerpc-ubuntu-22.04.4-desktop-amd64.iso
+
+      - name: Create a new release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v1.0.0 # You can dynamically set this with variables or inputs
+          release_name: Custom Ubuntu ISO v1.0.0
+          draft: false
+          prerelease: false
+
+      - name: Upload ISO to release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: custom-ubuntu-22.04.4-desktop-amd64.iso
+          asset_name: custom-ubuntu-22.04.4-desktop-amd64.iso
+          asset_content_type: application/octet-stream
