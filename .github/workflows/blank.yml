@@ -34,9 +34,9 @@ jobs:
         id: get-filename
         run: |
           if [[ "${{ github.event_name }}" == "release" ]]; then
-            echo "FILENAME=borgerpc-amd64-${{ github.event.release.tag_name }}.iso" >> $GITHUB_ENV
+            echo "FILENAME=borgerpc-amd64-${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           else
-            echo "FILENAME=borgerpc-amd64-dev.iso" >> $GITHUB_ENV
+            echo "FILENAME=borgerpc-amd64-dev" >> $GITHUB_ENV
           fi
 
       - name: Build OS2borgerpc image
@@ -48,13 +48,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILENAME }}
-          path: ./image/${{ env.FILENAME }}
+          path: ./image/"${{ env.FILENAME }}.iso"
 
       - name: Upload ISO to release (only for release events)
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./image/${{ env.FILENAME }}
+          asset_path: ./image/"${{ env.FILENAME }}.iso"
           asset_name: ${{ env.FILENAME }}
           asset_content_type: application/octet-stream
