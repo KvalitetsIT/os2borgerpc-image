@@ -48,6 +48,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: borgerpc-amd64.iso
+          asset_path: ./image/borgerpc-amd64.iso
           asset_name: borgerpc-amd64.iso
           asset_content_type: application/octet-stream
