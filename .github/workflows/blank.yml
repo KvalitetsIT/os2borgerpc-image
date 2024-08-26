@@ -36,7 +36,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: v1.0.0 # You can dynamically set this with variables or inputs
+          tag_name: ${{ github.ref_name }} #v1.0.0 # You can dynamically set this with variables or inputs
           release_name: Custom Ubuntu ISO v1.0.0
           draft: false
           prerelease: false
