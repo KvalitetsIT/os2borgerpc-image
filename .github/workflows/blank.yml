@@ -46,10 +46,10 @@ jobs:
 
       - name: Upload ISO as an artifact (for non-release events)
         if: github.event_name != 'release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.FILENAME }}
-          path: ${{ env.FILENAME }}.iso
+          name: ${{ env.FILENAME }}.iso
+          path: ./image/${{ env.FILENAME }}.iso
 
       - name: Upload ISO to release (only for release events)
         if: github.event_name == 'release'
