@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
   release:
     types: [created]
   workflow_dispatch:
@@ -48,13 +49,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILENAME }}
-          path: ./image/"${{ env.FILENAME }}.iso"
+          path: ${{ env.FILENAME }}.iso
 
       - name: Upload ISO to release (only for release events)
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./image/"${{ env.FILENAME }}.iso"
+          asset_path: ${{ env.FILENAME }}.iso
           asset_name: ${{ env.FILENAME }}
           asset_content_type: application/octet-stream
