@@ -78,6 +78,27 @@ set_os2borgerpc_config os2_product "$PRODUCT"
 VERSION=$(cat "$DIR"/../../VERSION)
 set_os2borgerpc_config os2borgerpc_version "$VERSION"
 
+# Path to the configuration file
+CONFIG_FILE="$DIR/../../config.cfg"
+
+# Read the configuration file line by line
+while IFS='=' read -r key value; do
+    # Skip lines that are empty or start with a '#'
+    [[ -z "$key" || "$key" =~ ^# ]] && continue
+
+    # Trim leading/trailing whitespace (optional, in case of poorly formatted file)
+    key=$(echo "$key" | xargs)
+    value=$(echo "$value" | xargs)
+
+    # Convert the key to lowercase
+    lowercase_key=$(echo "$key" | tr '[:upper:]' '[:lower:]')
+
+    # Call the function with the lowercase key and its value
+    set_os2borgerpc_config "$lowercase_key" "$value"
+
+done < "$CONFIG_FILE"
+
+
 echo "About to run assorted OS2borgerPC scripts from this repo:"
 
 # Remove Bluetooth indicator applet from Borger user
